@@ -1,20 +1,22 @@
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 from functools import lru_cache
-from typing import Optional
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-class Settings(BaseSettings):
-    API_KEY: str
-    TELEGRAM_BOT_TOKEN: str
-    TELEGRAM_CHANNEL_ID: str
-    ENVIRONMENT: str = "development"
-    DEBUG: bool = False
+class Settings(BaseModel):
+    API_KEY: str = os.getenv("API_KEY")
+    TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN")
+    TELEGRAM_CHANNEL_ID: str = os.getenv("TELEGRAM_CHANNEL_ID")
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
     PROJECT_NAME: str = "Telegram Relay API"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
 
     class Config:
-        env_file = ".env"
         case_sensitive = True
 
 
